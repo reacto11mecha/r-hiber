@@ -1,5 +1,5 @@
 function Visualizer() {
-  return <p>Visualizer</p>;
+  return <p>Visualisasi</p>;
 }
 
 export default Visualizer;

@@ -18,8 +18,8 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="settings" element={<Settings />} />
-          <Route path="visualizer" element={<Visualizer />} />
           <Route path="telemetry" element={<Telemetry />} />
+          <Route path="visualizer" element={<Visualizer />} />
         </Routes>
       </Container>
     </>
