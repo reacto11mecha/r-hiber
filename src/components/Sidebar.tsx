@@ -30,7 +30,7 @@ const items: ItemInterface[] = [
   {
     name: "Visualisasi",
     icon: "bi-send",
-    to: "/visualizer",
+    to: "/visualization",
   },
 ];
 

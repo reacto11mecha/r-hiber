@@ -11,3 +11,7 @@ main#root {
   height: -webkit-fill-available;
   max-height: 100vh;
 }
+
+.heading-page {
+  font-weight: 700;
+}
