@@ -7,24 +7,29 @@ import classNames from "classnames";
 
 interface ItemInterface {
   name: string;
+  icon: string;
   to: string;
 }
 
 const items: ItemInterface[] = [
   {
     name: "Beranda",
+    icon: "bi-house",
     to: "/",
   },
   {
     name: "Pengaturan",
+    icon: "bi-gear",
     to: "/settings",
   },
   {
     name: "Telemetri",
+    icon: "bi-file-bar-graph",
     to: "/telemetry",
   },
   {
     name: "Visualisasi",
+    icon: "bi-send",
     to: "/visualizer",
   },
 ];
@@ -46,6 +51,7 @@ function Sidebar() {
       <ul className="nav nav-pills flex-column mb-auto">
         {items.map((item) => (
           <ChildLink to={item.to} key={item.to}>
+            <i className={`bi ${item.icon}`} style={{ width: "1em" }}></i>{" "}
             {item.name}
           </ChildLink>
         ))}
