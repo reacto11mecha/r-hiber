@@ -1,5 +1,6 @@
 {
   "name": "r-hiber",
+  "description": "Aplikasi desktop untuk keperluan kontrol misi",
   "private": true,
   "version": "0.0.0",
   "scripts": {
@@ -12,6 +13,13 @@
     "tauri": "tauri",
     "prepare": "husky install"
   },
+  "keywords": [
+    "react",
+    "typescript",
+    "desktop-application",
+    "mission-control",
+    "tauri"
+  ],
   "dependencies": {
     "@fontsource/poppins": "^4.5.2",
     "@fontsource/roboto": "^4.5.3",
