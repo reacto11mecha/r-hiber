@@ -1,6 +1,9 @@
+import "@fontsource/poppins/700.css";
+
 import Styles from "@/styles/components/Sidebar.module.css";
 import { useMatch, useResolvedPath, Link } from "react-router-dom";
 import type { LinkProps } from "react-router-dom";
+import classNames from "classnames";
 
 interface ItemInterface {
   name: string;
@@ -35,7 +38,7 @@ function Sidebar() {
         to="/"
         className="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none"
       >
-        <span className="fs-4">HIBER</span>
+        <span className={`fs-4 ${Styles.header}`}>HIBER</span>
       </Link>
 
       <hr />
@@ -56,10 +59,13 @@ function ChildLink({ children, to, ...props }: LinkProps) {
   const match = useMatch({ path: resolved.pathname, end: true });
 
   return (
-    <li className={match ? "nav-item" : ""}>
+    <li className={classNames({ "nav-item": match })}>
       <Link
         to={to}
-        className={`nav-link ${match ? "active" : "text-white"}`}
+        className={classNames("nav-link", {
+          active: match,
+          "text-white": !match,
+        })}
         {...props}
       >
         {children}

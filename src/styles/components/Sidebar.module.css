@@ -2,3 +2,8 @@
   width: 17em;
   height: 100vh;
 }
+
+.header {
+  font-family: "Poppins", sans-serif;
+  font-weight: 700;
+}
