@@ -1,6 +1,9 @@
 import { Row, Col } from "react-bootstrap";
 import Styles from "@/styles/pages/Settings.module.css";
 
+import ArduinoPort from "@/components/ArduinoPort";
+import FileSave from "@/components/FileSave";
+
 function Settings() {
   return (
     <>
@@ -10,11 +13,17 @@ function Settings() {
         </Col>
       </Row>
       <Row className={Styles.rowSetting}>
-        <Col></Col>
-        <Col></Col>
+        <Col>
+          <ArduinoPort />
+        </Col>
+
+        <Col>
+          <FileSave />
+        </Col>
       </Row>
       <Row className={Styles.rowSetting}>
         <Col></Col>
+
         <Col></Col>
       </Row>
     </>
