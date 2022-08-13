@@ -1,7 +1,12 @@
 .container {
-  padding: 5em 12em;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .cardStyle {
-  min-height: 470px;
+  min-height: 300px;
+  min-width: 450px;
 }
