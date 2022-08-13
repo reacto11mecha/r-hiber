@@ -6,7 +6,7 @@ export interface IMachineState {
   velocity: number;
 }
 
-export const useMachineState = create<IMachineState>()((set) => ({
+export const useMachineState = create<IMachineState>()(() => ({
   isConnected: false,
   altitude: 0,
   velocity: 0,

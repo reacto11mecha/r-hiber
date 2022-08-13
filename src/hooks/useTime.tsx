@@ -21,7 +21,7 @@ export const useTime = (timeZone?: string) => {
       setSeconds(seconds);
     };
 
-    let interval = setInterval(() => update(), 500);
+    const interval = setInterval(() => update(), 500);
 
     return () => clearInterval(interval);
   }, []);

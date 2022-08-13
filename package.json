@@ -9,6 +9,7 @@
   "main": "dist/electron/main/index.js",
   "scripts": {
     "dev": "vite",
+    "lint": "eslint src/ electron/",
     "build": "tsc && vite build && electron-builder"
   },
   "engines": {
@@ -22,9 +23,13 @@
     "@types/react": "^18.0.15",
     "@types/react-dom": "^18.0.6",
     "@types/react-plotly.js": "^2.5.1",
+    "@typescript-eslint/eslint-plugin": "^5.33.0",
+    "@typescript-eslint/parser": "^5.33.0",
     "@vitejs/plugin-react": "^2.0.0",
     "electron": "^19.0.9",
     "electron-builder": "^23.1.0",
+    "eslint": "^8.21.0",
+    "eslint-plugin-react": "^7.30.1",
     "luxon": "^3.0.1",
     "picnic": "^7.1.0",
     "plotly.js": "^2.14.0",
