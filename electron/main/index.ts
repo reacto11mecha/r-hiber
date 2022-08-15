@@ -1,4 +1,5 @@
 import { app, BrowserWindow, shell, ipcMain } from "electron";
+import { SerialPort } from "serialport";
 import { release } from "os";
 import { join } from "path";
 
@@ -13,8 +14,6 @@ if (!app.requestSingleInstanceLock()) {
   process.exit(0);
 }
 
-process.env["ELECTRON_DISABLE_SECURITY_WARNINGS"] = "true";
-
 export const ROOT_PATH = {
   // /dist
   dist: join(__dirname, "../.."),
@@ -22,6 +21,7 @@ export const ROOT_PATH = {
   public: join(__dirname, app.isPackaged ? "../.." : "../../../public"),
 };
 
+let port: SerialPort | null = null;
 let win: BrowserWindow | null = null;
 // Here, you can also use other preload
 const preload = join(__dirname, "../preload/index.js");
@@ -35,8 +35,8 @@ async function createWindow() {
     icon: join(ROOT_PATH.public, "favicon.svg"),
     webPreferences: {
       preload,
-      nodeIntegration: true,
-      contextIsolation: false,
+      nodeIntegration: false,
+      contextIsolation: true,
     },
   });
 
@@ -46,11 +46,6 @@ async function createWindow() {
     win.loadURL(url);
     // win.webContents.openDevTools()
   }
-
-  // Test actively push message to the Electron-Renderer
-  win.webContents.on("did-finish-load", () => {
-    win?.webContents.send("main-process-message", new Date().toLocaleString());
-  });
 
   // Make all links open with the browser, not with the application
   win.webContents.setWindowOpenHandler(({ url }) => {
@@ -96,5 +91,66 @@ ipcMain.handle("open-win", (event, arg) => {
   } else {
     childWindow.loadURL(`${url}/#${arg}`);
     // childWindow.webContents.openDevTools({ mode: "undocked", activate: true })
+  }
+});
+
+// ===== IPC MAIN FOR HANDLING ARDUINO RECIEVER THING ===== //
+ipcMain.on("list-arduino-reciever", () =>
+  SerialPort.list().then((ports, err) => {
+    if (err)
+      return win?.webContents.send("error-retrieving-arduino-reciever", {
+        error: true,
+        message: err,
+      });
+
+    win?.webContents.send("list-all-arduino-reciever", {
+      error: false,
+      data: ports.filter(
+        (spec) =>
+          spec.path &&
+          spec.manufacturer &&
+          spec.pnpId &&
+          spec.vendorId &&
+          spec.productId
+      ),
+    });
+  })
+);
+
+ipcMain.on("ARCVR:connect-arduino", (event, path: string) => {
+  function assignPortIfPossible() {
+    port = new SerialPort({
+      path,
+      baudRate: 9600,
+    });
+
+    port.on("open", () =>
+      win?.webContents.send("ARCVR:connection-status", { connected: true })
+    );
+    port.on("close", () =>
+      win?.webContents.send("ARCVR:connection-status", { connected: false })
+    );
+
+    port.on("data", (data) =>
+      win?.webContents.send("ARCVR:on-data", { time: Date.now(), raw: data })
+    );
+
+    port.on("error", (error) => console.log(error));
+  }
+
+  if (port) {
+    if (port.isOpen) port.close();
+
+    assignPortIfPossible();
+    return;
+  }
+
+  assignPortIfPossible();
+});
+
+ipcMain.on("ARCVR:close-arduino", () => {
+  if (port && port.isOpen) {
+    port.close();
+    port = null;
   }
 });

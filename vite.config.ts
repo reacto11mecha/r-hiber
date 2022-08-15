@@ -39,8 +39,6 @@ export default defineConfig({
           },
         },
       },
-      // Enables use of Node.js API in the Electron-Renderer
-      renderer: {},
     }),
     renderBuiltUrl(),
   ],

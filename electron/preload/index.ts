@@ -1,3 +1,5 @@
+import { contextBridge, ipcRenderer } from "electron";
+
 function domReady(
   condition: DocumentReadyState[] = ["complete", "interactive"]
 ) {
@@ -92,3 +94,18 @@ window.onmessage = (ev) => {
 };
 
 setTimeout(removeLoading, 4999);
+
+// Context bridging
+contextBridge.exposeInMainWorld("telemetryAPI", {
+  sendListArduinoReciever: () => ipcRenderer.send("list-arduino-reciever"),
+  listenListArduinoReciever: (callback) =>
+    ipcRenderer.on("list-all-arduino-reciever", callback),
+
+  connectToArduinoReciever: (path) =>
+    ipcRenderer.send("ARCVR:connect-arduino", path),
+  arduinoOnData: (callback) => ipcRenderer.on("ARCVR:on-data", callback),
+  arduinoOnConnection: (callback) =>
+    ipcRenderer.on("ARCVR:connection-status", callback),
+
+  closeArduinoReceiver: () => ipcRenderer.send("ARCVR:close-arduino"),
+});
