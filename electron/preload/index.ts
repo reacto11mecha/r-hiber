@@ -100,12 +100,15 @@ contextBridge.exposeInMainWorld("telemetryAPI", {
   sendListArduinoReciever: () => ipcRenderer.send("list-arduino-reciever"),
   listenListArduinoReciever: (callback) =>
     ipcRenderer.on("list-all-arduino-reciever", callback),
+  arduinoGetListOnError: (callback) =>
+    ipcRenderer.on("error-retrieving-arduino-reciever", callback),
 
   connectToArduinoReciever: (path) =>
     ipcRenderer.send("ARCVR:connect-arduino", path),
   arduinoOnData: (callback) => ipcRenderer.on("ARCVR:on-data", callback),
   arduinoOnConnection: (callback) =>
     ipcRenderer.on("ARCVR:connection-status", callback),
+  arduinoOnError: (callback) => ipcRenderer.on("ARCVR:on-error", callback),
 
   closeArduinoReceiver: () => ipcRenderer.send("ARCVR:close-arduino"),
 });

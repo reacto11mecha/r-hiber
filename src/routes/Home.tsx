@@ -13,6 +13,10 @@ export const Home = () => {
       if (!data.error && data.data) setArduinos(data.data);
     });
 
+    window.telemetryAPI.arduinoGetListOnError((ev, error) => {
+      console.log(error);
+    });
+
     window.telemetryAPI.sendListArduinoReciever();
   }, []);
 

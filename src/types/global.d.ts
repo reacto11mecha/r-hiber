@@ -18,6 +18,9 @@ type TLMType = {
       data: { error: boolean; data?: PortInfo[]; message?: string }
     ) => void
   ) => void;
+  arduinoGetListOnError: (
+    cb: (event: IpcRendererEvent, error: Error) => void
+  ) => void;
 
   connectToArduinoReciever: (path: string) => void;
   arduinoOnData: (
@@ -26,6 +29,7 @@ type TLMType = {
   arduinoOnConnection: (
     cb: (event: IpcRendererEvent, data: { connected: boolean }) => void
   ) => void;
+  arduinoOnError: (cb: (event: IpcRendererEvent, error: Error) => void) => void;
 
   closeArduinoReceiver: () => void;
 };

@@ -12,6 +12,7 @@ import { LocalTimeClock } from "@/components/pages/Viewer/LocalTimeClock";
 import { LocalTimeDate } from "@/components/pages/Viewer/LocalTimeDate";
 import { ISConnectedCard } from "@/components/pages/Viewer/ISConnectedCard";
 import { ReceivedTimeUNIX } from "@/components/pages/Viewer/ReceivedTimeUNIX";
+import { FlightState } from "@/components/pages/Viewer/FlightState";
 
 export const Viewer = () => {
   const params = useParams();
@@ -34,6 +35,10 @@ export const Viewer = () => {
     window.telemetryAPI.arduinoOnConnection((ev, status) =>
       setConnectionStatus(status.connected)
     );
+
+    window.telemetryAPI.arduinoOnError((ev, error) => {
+      console.error(error.message);
+    });
 
     return () => {
       window.telemetryAPI.closeArduinoReceiver();
@@ -69,12 +74,12 @@ export const Viewer = () => {
           <ReceivedTimeUNIX />
         </div>
 
-        <div className={styles.cardContainer}></div>
+        <div className={styles.cardContainer}>
+          <FlightState />
+        </div>
 
         <div className={styles.cardContainer}></div>
       </div>
-
-      <div className={`flex one ${styles.flexMaximizer}`}></div>
 
       <div className={`flex one ${styles.flexMaximizer}`}></div>
 

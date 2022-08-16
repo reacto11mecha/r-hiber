@@ -13,8 +13,8 @@ export const ReceivedTimeUNIX = () => {
       <footer className={styles.cardFooter}>
         <h3>Received data in UNIX Timestamp</h3>
         <h4 className={styles.cardInfo}>
-          {!isConnected && "N/A"}
-          {isConnected && receivedTime && `${receivedTime}`}
+          {!isConnected && receivedTime <= 0 && "N/A"}
+          {(isConnected || receivedTime > 0) && `${receivedTime}`}
         </h4>
       </footer>
     </article>

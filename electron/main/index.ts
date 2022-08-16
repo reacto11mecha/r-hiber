@@ -98,10 +98,7 @@ ipcMain.handle("open-win", (event, arg) => {
 ipcMain.on("list-arduino-reciever", () =>
   SerialPort.list().then((ports, err) => {
     if (err)
-      return win?.webContents.send("error-retrieving-arduino-reciever", {
-        error: true,
-        message: err,
-      });
+      return win?.webContents.send("error-retrieving-arduino-reciever", err);
 
     win?.webContents.send("list-all-arduino-reciever", {
       error: false,
@@ -135,7 +132,7 @@ ipcMain.on("ARCVR:connect-arduino", (event, path: string) => {
       win?.webContents.send("ARCVR:on-data", { time: Date.now(), raw: data })
     );
 
-    port.on("error", (error) => console.log(error));
+    port.on("error", (error) => win?.webContents.send("ARCVR:on-error", error));
   }
 
   if (port) {
