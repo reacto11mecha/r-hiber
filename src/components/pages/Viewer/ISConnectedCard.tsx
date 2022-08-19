@@ -1,13 +1,14 @@
 import { useParams } from "react-router-dom";
-import styles from "styles/pages/Viewer.module.css";
 import { useMachineState } from "@/stores/ViewerStore";
+import { Box, VStack, Heading, Text } from "@chakra-ui/react";
 
 export const ISConnectedCard = () => {
   const params = useParams();
   const isConnected = useMachineState((state) => state.isConnected);
 
-  return (
-    <article className={`card ${styles.cardStyle}`}>
+  // return (
+  {
+    /* <article className={`card ${styles.cardStyle}`}>
       <footer className={styles.cardFooter}>
         <h3>Connected to Reciever</h3>
         <h4 className={styles.cardInfo}>
@@ -28,6 +29,18 @@ export const ISConnectedCard = () => {
           )}
         </h4>
       </footer>
-    </article>
+    </article> */
+  }
+  // );
+
+  return (
+    <Box h="25%" w="100%" backgroundColor="tomato">
+      <VStack h="100%" alignItems="center" justifyContent="center" spacing={5}>
+        <Heading as="h3" size="lg" align="center">
+          Connection Status
+        </Heading>
+        <Text fontSize="xl" align="center"></Text>
+      </VStack>
+    </Box>
   );
 };

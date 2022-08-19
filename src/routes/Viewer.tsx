@@ -4,12 +4,9 @@ import { useParams } from "react-router-dom";
 
 import { useMachineState } from "@/stores/ViewerStore";
 
-import styles from "styles/pages/Viewer.module.css";
+import { Flex, HStack, VStack } from "@chakra-ui/react";
 
-import { UTCTimeClock } from "@/components/pages/Viewer/UTCTimeClock";
-import { CapeCanaveralTimeClock } from "@/components/pages/Viewer/CapeCanaveralTimeClock";
-import { LocalTimeClock } from "@/components/pages/Viewer/LocalTimeClock";
-import { LocalTimeDate } from "@/components/pages/Viewer/LocalTimeDate";
+import { TemplateTimeClock } from "@/components/pages/Viewer/TemplateTimeClock";
 import { ISConnectedCard } from "@/components/pages/Viewer/ISConnectedCard";
 import { ReceivedTimeUNIX } from "@/components/pages/Viewer/ReceivedTimeUNIX";
 import { FlightState } from "@/components/pages/Viewer/FlightState";
@@ -46,44 +43,27 @@ export const Viewer = () => {
   }, []);
 
   return (
-    <div className={`flex four ${styles.mainFlexContainer}`}>
-      <div className={`flex one ${styles.flexMaximizer}`}>
-        <div className={styles.cardContainer}>
-          <UTCTimeClock />
-        </div>
+    <Flex w="100vw" h="90vh">
+      <Flex w="20%">
+        <VStack w="100%" spacing={5}>
+          <TemplateTimeClock timeZone="utc" headingText="UTC Time" />
+          <TemplateTimeClock timeZone="Asia/Jakarta" headingText="WIB Time" />
+          <TemplateTimeClock timeZone="Asia/Makassar" headingText="WITA Time" />
+          <TemplateTimeClock timeZone="Asia/Jayapura" headingText="WIT Time" />
+        </VStack>
+      </Flex>
 
-        <div className={styles.cardContainer}>
-          <CapeCanaveralTimeClock />
-        </div>
-
-        <div className={styles.cardContainer}>
-          <LocalTimeClock />
-        </div>
-
-        <div className={styles.cardContainer}>
-          <LocalTimeDate />
-        </div>
-      </div>
-
-      <div className={`flex one ${styles.flexMaximizer}`}>
-        <div className={styles.cardContainer}>
+      <Flex w="20%">
+        <VStack w="100%" spacing={5}>
           <ISConnectedCard />
-        </div>
+          {/* <ReceivedTimeUNIX />
+          <FlightState /> */}
+        </VStack>
+      </Flex>
 
-        <div className={styles.cardContainer}>
-          <ReceivedTimeUNIX />
-        </div>
-
-        <div className={styles.cardContainer}>
-          <FlightState />
-        </div>
-
-        <div className={styles.cardContainer}></div>
-      </div>
-
-      <div className={`flex one ${styles.flexMaximizer}`}></div>
-
-      <div className={`flex one ${styles.flexMaximizer}`}></div>
-    </div>
+      <Flex w="auto">
+        <VStack w="100%"></VStack>
+      </Flex>
+    </Flex>
   );
 };
