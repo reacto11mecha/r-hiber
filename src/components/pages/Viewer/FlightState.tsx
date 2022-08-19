@@ -1,12 +1,15 @@
-import styles from "styles/pages/Viewer.module.css";
+import { Box, VStack, Heading, Text } from "@chakra-ui/react";
 
 export const FlightState = () => (
-  <article className={`card ${styles.cardStyle}`}>
-    <footer className={styles.cardFooter}>
-      <h3>Flight State</h3>
-      <h4 className={styles.cardInfo}>
-        <pre style={{ textAlign: "center" }}>Ground Idle</pre>
-      </h4>
-    </footer>
-  </article>
+  <Box h="33%" w="100%" backgroundColor="tomato" p={5}>
+    <VStack h="100%" alignItems="center" justifyContent="center">
+      <Heading as="h3" size="lg" align="center">
+        Flight State
+      </Heading>
+
+      <Text fontSize="xl" align="center" as="kbd">
+        Ground Idle
+      </Text>
+    </VStack>
+  </Box>
 );

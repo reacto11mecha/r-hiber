@@ -69,7 +69,7 @@ export const Viewer = () => {
       <VStack w="22.5%" spacing={5}>
         <ISConnectedCard />
         <ReceivedTimeUNIX />
-        {/* <FlightState /> */}
+        <FlightState />
       </VStack>
       <VStack w="55%"></VStack>
     </Stack>
