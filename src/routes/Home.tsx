@@ -1,60 +1,123 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 
-import type { PortInfo } from "@/types/global.d";
+import type { PortInfo, ArduinoList, ArduinoListError } from "@/types/global.d";
 
-import styles from "styles/pages/Home.module.css";
+import {
+  useToast,
+  Flex,
+  Stack,
+  Box,
+  Heading,
+  Text,
+  Button,
+  List,
+  ListItem,
+  ListIcon,
+} from "@chakra-ui/react";
+import { IoRocketOutline } from "react-icons/io5";
+import { MdUsb, MdArrowRightAlt } from "react-icons/md";
 
 export const Home = () => {
+  const toast = useToast();
   const [arduinos, setArduinos] = useState<null | PortInfo[]>(null);
 
   useEffect(() => {
-    window.telemetryAPI.listenListArduinoReciever((event, data) => {
-      if (!data.error && data.data) setArduinos(data.data);
-    });
+    const onTLMArduList = (event: CustomEvent<ArduinoList>) =>
+      setArduinos(event.detail.list);
+    const onTLMArduListError = (event: CustomEvent<ArduinoListError>) => {
+      toast({
+        title: event.detail.message,
+        position: "bottom-right",
+        status: "error",
+      });
+    };
 
-    window.telemetryAPI.arduinoGetListOnError((ev, error) => {
-      console.log(error);
-    });
+    window.addEventListener("telemetry:on-arduino-list", onTLMArduList);
+    window.addEventListener(
+      "telemetry:on-arduino-list-error",
+      onTLMArduListError
+    );
 
-    window.telemetryAPI.sendListArduinoReciever();
+    window.telemetryAPI.sendListArduinoReceiver();
+
+    return () => {
+      window.removeEventListener("telemetry:on-arduino-list", onTLMArduList);
+      window.removeEventListener(
+        "telemetry:on-arduino-list-error",
+        onTLMArduListError
+      );
+    };
   }, []);
 
   return (
-    <div className={styles.container}>
-      <div>
-        <article className={`card ${styles.cardStyle}`}>
-          <footer>
-            <h1>List Arduino</h1>
-            {!arduinos && <p>Sedang mengambil data...</p>}
-            {arduinos && arduinos.length < 1 && (
-              <>
-                <p>Tidak ditemukan adanya arduino penerima telemetri</p>
-                <button
-                  onClick={() => {
-                    setArduinos(null);
-                    window.telemetryAPI.sendListArduinoReciever();
-                  }}
-                >
-                  Ambil data ulang
-                </button>
-              </>
-            )}
-            {arduinos && arduinos.length > 0 && (
-              <ul>
-                {arduinos.map((arduino) => (
-                  <li key={arduino.path}>
-                    {/* eslint-disable-next-line @typescript-eslint/no-non-null-assertion */}
-                    <Link to={`viewer/${encodeURIComponent(arduino.path!)}`}>
+    <Flex align="center" justify="center" width="100vw" height="100vh">
+      <Stack spacing={10}>
+        <Heading
+          as="h2"
+          size="3xl"
+          style={{ display: "inline-flex", justifyContent: "space-around" }}
+        >
+          Roket Hiber <IoRocketOutline />
+        </Heading>
+        <Box
+          p={5}
+          minH="300px"
+          minW="488px"
+          borderWidth="1px"
+          borderRadius="lg"
+          overflow="hidden"
+        >
+          <Stack spacing={5} height="100%">
+            <Heading as="h3" size="lg">
+              List Arduino
+            </Heading>
+            <Box>
+              {!arduinos && <Text fontSize="lg">Sedang mengambil data...</Text>}
+              {arduinos && arduinos.length < 1 && (
+                <>
+                  <Text fontSize="lg">
+                    Tidak ditemukan adanya arduino penerima telemetri
+                  </Text>
+                  <Button
+                    colorScheme="blue"
+                    marginTop="2"
+                    onClick={() => {
+                      setArduinos(null);
+                      window.telemetryAPI.sendListArduinoReceiver();
+                    }}
+                  >
+                    List Ulang
+                  </Button>
+                </>
+              )}
+              {arduinos && arduinos.length > 0 && (
+                <List spacing={4}>
+                  {arduinos.map((arduino) => (
+                    <ListItem fontSize="lg" key={arduino.path}>
+                      <ListIcon as={MdUsb} color="green.500" />
                       {arduino.path}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            )}
-          </footer>
-        </article>
-      </div>
-    </div>
+
+                      <Button
+                        colorScheme="blue"
+                        marginLeft="179px"
+                        rightIcon={
+                          <MdArrowRightAlt style={{ fontSize: "2.05em" }} />
+                        }
+                        as={Link}
+                        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                        to={`viewer/${encodeURIComponent(arduino.path!)}`}
+                      >
+                        Pantau
+                      </Button>
+                    </ListItem>
+                  ))}
+                </List>
+              )}
+            </Box>
+          </Stack>
+        </Box>
+      </Stack>
+    </Flex>
   );
 };

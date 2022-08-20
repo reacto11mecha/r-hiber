@@ -59,6 +59,11 @@ app.whenReady().then(createWindow);
 app.on("window-all-closed", () => {
   win = null;
   if (process.platform !== "darwin") app.quit();
+
+  if (port) {
+    if (port.isOpen) port.close();
+    port = null;
+  }
 });
 
 app.on("second-instance", () => {
@@ -101,8 +106,7 @@ ipcMain.on("list-arduino-reciever", () =>
       return win?.webContents.send("error-retrieving-arduino-reciever", err);
 
     win?.webContents.send("list-all-arduino-reciever", {
-      error: false,
-      data: ports.filter(
+      list: ports.filter(
         (spec) =>
           spec.path &&
           spec.manufacturer &&
@@ -114,35 +118,40 @@ ipcMain.on("list-arduino-reciever", () =>
   })
 );
 
+function assignPortIfPossible(path: string) {
+  port = new SerialPort({
+    path,
+    baudRate: 9600,
+  });
+
+  port.on("open", () =>
+    win?.webContents.send("ARCVR:connection-status", { connected: true })
+  );
+  port.on("close", () =>
+    win?.webContents.send("ARCVR:connection-status", { connected: false })
+  );
+
+  port.on("data", (data) =>
+    win?.webContents.send("ARCVR:on-data", { time: Date.now(), raw: data })
+  );
+
+  port.on("error", (error) => win?.webContents.send("ARCVR:on-error", error));
+}
+
 ipcMain.on("ARCVR:connect-arduino", (event, path: string) => {
-  function assignPortIfPossible() {
-    port = new SerialPort({
-      path,
-      baudRate: 9600,
-    });
-
-    port.on("open", () =>
-      win?.webContents.send("ARCVR:connection-status", { connected: true })
-    );
-    port.on("close", () =>
-      win?.webContents.send("ARCVR:connection-status", { connected: false })
-    );
-
-    port.on("data", (data) =>
-      win?.webContents.send("ARCVR:on-data", { time: Date.now(), raw: data })
-    );
-
-    port.on("error", (error) => win?.webContents.send("ARCVR:on-error", error));
-  }
-
   if (port) {
-    if (port.isOpen) port.close();
+    if (port.path === path) {
+      if (port.isOpen)
+        win?.webContents.send("ARCVR:connection-status", { connected: true });
+      else port.open();
+    } else {
+      port.close().then(() => assignPortIfPossible(path));
+    }
 
-    assignPortIfPossible();
     return;
   }
 
-  assignPortIfPossible();
+  assignPortIfPossible(path);
 });
 
 ipcMain.on("ARCVR:close-arduino", () => {

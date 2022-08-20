@@ -97,18 +97,77 @@ setTimeout(removeLoading, 4999);
 
 // Context bridging
 contextBridge.exposeInMainWorld("telemetryAPI", {
-  sendListArduinoReciever: () => ipcRenderer.send("list-arduino-reciever"),
-  listenListArduinoReciever: (callback) =>
-    ipcRenderer.on("list-all-arduino-reciever", callback),
-  arduinoGetListOnError: (callback) =>
-    ipcRenderer.on("error-retrieving-arduino-reciever", callback),
+  sendListArduinoReceiver: () => ipcRenderer.send("list-arduino-reciever"),
 
-  connectToArduinoReciever: (path) =>
+  connectToArduinoReceiver: (path) =>
     ipcRenderer.send("ARCVR:connect-arduino", path),
-  arduinoOnData: (callback) => ipcRenderer.on("ARCVR:on-data", callback),
-  arduinoOnConnection: (callback) =>
-    ipcRenderer.on("ARCVR:connection-status", callback),
-  arduinoOnError: (callback) => ipcRenderer.on("ARCVR:on-error", callback),
-
   closeArduinoReceiver: () => ipcRenderer.send("ARCVR:close-arduino"),
+});
+
+ipcRenderer.on("list-all-arduino-reciever", (ev, detail) => {
+  const telemetryOnArduinoList = new CustomEvent("telemetry:on-arduino-list", {
+    detail,
+    bubbles: false,
+    cancelable: true,
+    composed: true,
+  });
+
+  window.dispatchEvent(telemetryOnArduinoList);
+});
+
+ipcRenderer.on("error-retrieving-arduino-reciever", (ev, detail) => {
+  const telemetryOnArduinoListError = new CustomEvent(
+    "telemetry:on-arduino-list-error",
+    {
+      detail,
+      bubbles: false,
+      cancelable: true,
+      composed: true,
+    }
+  );
+
+  window.dispatchEvent(telemetryOnArduinoListError);
+});
+
+
+ipcRenderer.on("ARCVR:on-data", (ev, detail) => {
+  const telemetryReceiverOnData = new CustomEvent(
+    "telemetry:receiver-on-data",
+    {
+      detail,
+      bubbles: false,
+      cancelable: true,
+      composed: true,
+    }
+  );
+
+  window.dispatchEvent(telemetryReceiverOnData)
+});
+
+ipcRenderer.on("ARCVR:connection-status", (ev, detail) => {
+  const telemetryReceiverConnectionStatus = new CustomEvent(
+    "telemetry:receiver-connection-status",
+    {
+      detail,
+      bubbles: false,
+      cancelable: true,
+      composed: true,
+    }
+  );
+
+  window.dispatchEvent(telemetryReceiverConnectionStatus)
+});
+
+ipcRenderer.on("ARCVR:on-error", (ev, detail) => {
+  const telemetryReceiverOnError = new CustomEvent(
+    "telemetry:receiver-on-error",
+    {
+      detail,
+      bubbles: false,
+      cancelable: true,
+      composed: true,
+    }
+  );
+
+  window.dispatchEvent(telemetryReceiverOnError)
 });

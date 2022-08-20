@@ -4,86 +4,91 @@ import { useParams } from "react-router-dom";
 
 import { useMachineState } from "@/stores/ViewerStore";
 
-import styles from "styles/pages/Viewer.module.css";
+import {
+  Flex,
+  Stack,
+  VStack,
+  useToast,
+} from "@chakra-ui/react";
 
-import { UTCTimeClock } from "@/components/pages/Viewer/UTCTimeClock";
-import { CapeCanaveralTimeClock } from "@/components/pages/Viewer/CapeCanaveralTimeClock";
-import { LocalTimeClock } from "@/components/pages/Viewer/LocalTimeClock";
-import { LocalTimeDate } from "@/components/pages/Viewer/LocalTimeDate";
+import { TemplateTimeClock } from "@/components/pages/Viewer/TemplateTimeClock";
 import { ISConnectedCard } from "@/components/pages/Viewer/ISConnectedCard";
 import { ReceivedTimeUNIX } from "@/components/pages/Viewer/ReceivedTimeUNIX";
 import { FlightState } from "@/components/pages/Viewer/FlightState";
 
+import type { ReceiverOnData, ReceiverOnConnection, ReceiverOnError } from "@/types/global.d";
+
 export const Viewer = () => {
   const params = useParams();
-  const { setConnectionStatus, setRecievedTime } = useMachineState(
-    ({ setConnectionStatus, setRecievedTime }) => ({
+  const toast = useToast();
+
+  const isConnected = useMachineState((state) => state.isConnected);
+  const { setConnectionStatus, setReceivedTime } = useMachineState(
+    ({ setConnectionStatus, setReceivedTime }) => ({
       setConnectionStatus,
-      setRecievedTime,
+      setReceivedTime,
     }),
     shallow
   );
 
   useEffect(() => {
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    window.telemetryAPI.connectToArduinoReciever(params.usbPath!);
+    if (!isConnected)
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      window.telemetryAPI.connectToArduinoReceiver(params.usbPath!);
 
-    window.telemetryAPI.arduinoOnData((ev, data) => {
-      setRecievedTime(data.time);
-    });
+    const RcvrOnData = (event: CustomEvent<ReceiverOnData>) => {
+      setReceivedTime(event.detail.time)
+    }
+    const RcvrConnectionStatus = (event: CustomEvent<ReceiverOnConnection>) => {
+      setConnectionStatus(event.detail.connected);
 
-    window.telemetryAPI.arduinoOnConnection((ev, status) =>
-      setConnectionStatus(status.connected)
-    );
+      if (event.detail.connected)
+        toast({
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+          title: `Connected to ${params.usbPath!} successfully`,
+          position: "bottom-right",
+          status: "success",
+        });
+    }
+    const RcvrOnError = (event: CustomEvent<ReceiverOnError>) => {
+      toast({
+        title: event.detail.message,
+        position: "bottom-right",
+        status: "error",
+      });
+    }
 
-    window.telemetryAPI.arduinoOnError((ev, error) => {
-      console.error(error.message);
-    });
+    window.addEventListener("telemetry:receiver-on-data", RcvrOnData)
+    window.addEventListener("telemetry:receiver-connection-status", RcvrConnectionStatus)
+    window.addEventListener("telemetry:receiver-on-error", RcvrOnError);
 
     return () => {
-      window.telemetryAPI.closeArduinoReceiver();
+      window.removeEventListener("telemetry:receiver-on-data", RcvrOnData)
+      window.removeEventListener("telemetry:receiver-connection-status", RcvrConnectionStatus)
+      window.addEventListener("telemetry:receiver-on-error", RcvrOnError);
+      
+      if (isConnected) window.telemetryAPI.closeArduinoReceiver();
     };
   }, []);
 
   return (
-    <div className={`flex four ${styles.mainFlexContainer}`}>
-      <div className={`flex one ${styles.flexMaximizer}`}>
-        <div className={styles.cardContainer}>
-          <UTCTimeClock />
-        </div>
-
-        <div className={styles.cardContainer}>
-          <CapeCanaveralTimeClock />
-        </div>
-
-        <div className={styles.cardContainer}>
-          <LocalTimeClock />
-        </div>
-
-        <div className={styles.cardContainer}>
-          <LocalTimeDate />
-        </div>
-      </div>
-
-      <div className={`flex one ${styles.flexMaximizer}`}>
-        <div className={styles.cardContainer}>
+    <>
+      <Stack direction={"row"} spacing={5} h="90vh">
+        <VStack w="22.5%" spacing={5}>
+          <TemplateTimeClock timeZone="utc" headingText="UTC Time" />
+          <TemplateTimeClock timeZone="Asia/Jakarta" headingText="WIB Time" />
+          <TemplateTimeClock timeZone="Asia/Makassar" headingText="WITA Time" />
+          <TemplateTimeClock timeZone="Asia/Jayapura" headingText="WIT Time" />
+        </VStack>
+        <VStack w="22.5%" spacing={5}>
           <ISConnectedCard />
-        </div>
-
-        <div className={styles.cardContainer}>
           <ReceivedTimeUNIX />
-        </div>
-
-        <div className={styles.cardContainer}>
           <FlightState />
-        </div>
-
-        <div className={styles.cardContainer}></div>
-      </div>
-
-      <div className={`flex one ${styles.flexMaximizer}`}></div>
-
-      <div className={`flex one ${styles.flexMaximizer}`}></div>
-    </div>
+        </VStack>
+        <VStack w="55%"></VStack>
+      </Stack>
+      <Flex h="10vh" w="100%">
+      </Flex>
+    </>
   );
 };
