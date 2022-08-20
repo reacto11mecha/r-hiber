@@ -18,7 +18,7 @@ import { ISConnectedCard } from "@/components/pages/Viewer/ISConnectedCard";
 import { ReceivedTimeUNIX } from "@/components/pages/Viewer/ReceivedTimeUNIX";
 import { FlightState } from "@/components/pages/Viewer/FlightState";
 
-import type { ReceiverOnData, ReceiverOnConnection } from "@/types/global.d";
+import type { ReceiverOnData, ReceiverOnConnection, ReceiverOnError } from "@/types/global.d";
 
 export const Viewer = () => {
   const params = useParams();

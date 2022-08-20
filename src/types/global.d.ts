@@ -1,5 +1,3 @@
-import { IpcRendererEvent } from "electron";
-
 export interface PortInfo {
   path: string;
   manufacturer: string | undefined;
@@ -21,7 +19,7 @@ export interface ReceiverOnData {
 export interface ReceiverOnConnection {
   connected: boolean;
 }
-export type ArduinoOnError = Error;
+export type ReceiverOnError = Error;
 
 type TLMType = {
   sendListArduinoReceiver: () => void;

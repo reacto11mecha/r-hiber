@@ -31,7 +31,7 @@ export const ISConnectedCard = () => {
             <Button
               onClick={() =>
                 // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                window.telemetryAPI.connectToArduinoReciever(params.usbPath!)
+                window.telemetryAPI.connectToArduinoReceiver(params.usbPath!)
               }
               colorScheme="red"
               minH={6}

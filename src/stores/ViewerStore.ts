@@ -6,7 +6,7 @@ export interface IMachineState {
   altitude: number;
   velocity: number;
 
-  setRecievedTime: (time: number) => void;
+  setReceivedTime: (time: number) => void;
   setConnectionStatus: (isConnected: boolean) => void;
 }
 
