@@ -7,10 +7,8 @@ import { useMachineState } from "@/stores/ViewerStore";
 import {
   Flex,
   Stack,
-  HStack,
   VStack,
   useToast,
-  useColorMode,
 } from "@chakra-ui/react";
 
 import { TemplateTimeClock } from "@/components/pages/Viewer/TemplateTimeClock";
@@ -24,7 +22,6 @@ export const Viewer = () => {
   const params = useParams();
   const toast = useToast();
 
-  const { colorMode, toggleColorMode } = useColorMode();
   const isConnected = useMachineState((state) => state.isConnected);
   const { setConnectionStatus, setReceivedTime } = useMachineState(
     ({ setConnectionStatus, setReceivedTime }) => ({
@@ -35,8 +32,8 @@ export const Viewer = () => {
   );
 
   useEffect(() => {
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     if (!isConnected)
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       window.telemetryAPI.connectToArduinoReceiver(params.usbPath!);
 
     const RcvrOnData = (event: CustomEvent<ReceiverOnData>) => {
