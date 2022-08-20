@@ -16,6 +16,6 @@ export const useMachineState = create<IMachineState>()((set) => ({
   altitude: 0,
   velocity: 0,
 
-  setRecievedTime: (time: number) => set(() => ({ receivedTime: time })),
+  setReceivedTime: (time: number) => set(() => ({ receivedTime: time })),
   setConnectionStatus: (isConnected: boolean) => set(() => ({ isConnected })),
 }));

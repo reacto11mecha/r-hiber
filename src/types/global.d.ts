@@ -9,33 +9,38 @@ export interface PortInfo {
   productId: string | undefined;
   vendorId: string | undefined;
 }
+export interface ArduinoList {
+  list: PortInfo[];
+}
+export type ArduinoListError = Error;
+
+export interface ReceiverOnData {
+  time: number;
+  raw: string;
+}
+export interface ReceiverOnConnection {
+  connected: boolean;
+}
+export type ArduinoOnError = Error;
 
 type TLMType = {
-  sendListArduinoReciever: () => void;
-  listenListArduinoReciever: (
-    cb: (
-      event: IpcRendererEvent,
-      data: { error: boolean; data?: PortInfo[]; message?: string }
-    ) => void
-  ) => void;
-  arduinoGetListOnError: (
-    cb: (event: IpcRendererEvent, error: Error) => void
-  ) => void;
+  sendListArduinoReceiver: () => void;
 
-  connectToArduinoReciever: (path: string) => void;
-  arduinoOnData: (
-    cb: (event: IpcRendererEvent, data: { time: number; raw: string }) => void
-  ) => void;
-  arduinoOnConnection: (
-    cb: (event: IpcRendererEvent, data: { connected: boolean }) => void
-  ) => void;
-  arduinoOnError: (cb: (event: IpcRendererEvent, error: Error) => void) => void;
-
+  connectToArduinoReceiver: (path: string) => void;
   closeArduinoReceiver: () => void;
 };
 
 declare global {
   interface Window {
     telemetryAPI: TLMType;
+  }
+
+  interface WindowEventMap {
+    "telemetry:on-arduino-list": CustomEvent<ArduinoList>;
+    "telemetry:on-arduino-list-error": CustomEvent<ArduinoListError>;
+
+    "telemetry:receiver-on-data": CustomEvent<ReceiverOnData>;
+    "telemetry:receiver-connection-status": CustomEvent<ReceiverOnConnection>;
+    "telemetry:receiver-on-error": CustomEvent<ReceiverOnError>;
   }
 }

@@ -106,8 +106,7 @@ ipcMain.on("list-arduino-reciever", () =>
       return win?.webContents.send("error-retrieving-arduino-reciever", err);
 
     win?.webContents.send("list-all-arduino-reciever", {
-      error: false,
-      data: ports.filter(
+      list: ports.filter(
         (spec) =>
           spec.path &&
           spec.manufacturer &&

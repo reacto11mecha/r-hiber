@@ -1,9 +1,10 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 
-import type { PortInfo } from "@/types/global.d";
+import type { PortInfo, ArduinoList, ArduinoListError } from "@/types/global.d";
 
 import {
+  useToast,
   Flex,
   Stack,
   Box,
@@ -18,18 +19,35 @@ import { IoRocketOutline } from "react-icons/io5";
 import { MdUsb, MdArrowRightAlt } from "react-icons/md";
 
 export const Home = () => {
+  const toast = useToast();
   const [arduinos, setArduinos] = useState<null | PortInfo[]>(null);
 
   useEffect(() => {
-    window.telemetryAPI.listenListArduinoReciever((event, data) => {
-      if (!data.error && data.data) setArduinos(data.data);
-    });
+    const onTLMArduList = (event: CustomEvent<ArduinoList>) =>
+      setArduinos(event.detail.list);
+    const onTLMArduListError = (event: CustomEvent<ArduinoListError>) => {
+      toast({
+        title: event.detail.message,
+        position: "bottom-right",
+        status: "error",
+      });
+    };
 
-    window.telemetryAPI.arduinoGetListOnError((ev, error) => {
-      console.log(error);
-    });
+    window.addEventListener("telemetry:on-arduino-list", onTLMArduList);
+    window.addEventListener(
+      "telemetry:on-arduino-list-error",
+      onTLMArduListError
+    );
 
-    window.telemetryAPI.sendListArduinoReciever();
+    window.telemetryAPI.sendListArduinoReceiver();
+
+    return () => {
+      window.removeEventListener("telemetry:on-arduino-list", onTLMArduList);
+      window.removeEventListener(
+        "telemetry:on-arduino-list-error",
+        onTLMArduListError
+      );
+    };
   }, []);
 
   return (
@@ -66,7 +84,7 @@ export const Home = () => {
                     marginTop="2"
                     onClick={() => {
                       setArduinos(null);
-                      window.telemetryAPI.sendListArduinoReciever();
+                      window.telemetryAPI.sendListArduinoReceiver();
                     }}
                   >
                     List Ulang
