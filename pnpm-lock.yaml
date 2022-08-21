@@ -8,6 +8,17 @@ specifiers:
   '@emotion/styled': ^11.10.0
   '@fontsource/lato': ^4.5.9
   '@fontsource/poppins': ^4.5.9
+  '@serialport/parser-byte-length': ^10.3.0
+  '@serialport/parser-cctalk': ^10.3.0
+  '@serialport/parser-delimiter': ^10.3.0
+  '@serialport/parser-inter-byte-timeout': ^10.3.0
+  '@serialport/parser-packet-length': ^10.3.0
+  '@serialport/parser-readline': ^10.3.0
+  '@serialport/parser-ready': ^10.3.0
+  '@serialport/parser-regex': ^10.3.0
+  '@serialport/parser-slip-encoder': ^10.3.0
+  '@serialport/parser-spacepacket': ^10.3.0
+  '@serialport/stream': ^10.3.0
   '@types/luxon': ^3.0.0
   '@types/plotly.js': ^2.12.2
   '@types/react': ^18.0.15
@@ -39,6 +50,17 @@ specifiers:
   zustand: ^4.0.0
 
 dependencies:
+  '@serialport/parser-byte-length': 10.3.0
+  '@serialport/parser-cctalk': 10.3.0
+  '@serialport/parser-delimiter': 10.3.0
+  '@serialport/parser-inter-byte-timeout': 10.3.0
+  '@serialport/parser-packet-length': 10.3.0
+  '@serialport/parser-readline': 10.3.0
+  '@serialport/parser-ready': 10.3.0
+  '@serialport/parser-regex': 10.3.0
+  '@serialport/parser-slip-encoder': 10.3.0
+  '@serialport/parser-spacepacket': 10.3.0
+  '@serialport/stream': 10.3.0
   serialport: 10.4.0
 
 devDependencies:

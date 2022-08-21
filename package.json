@@ -58,6 +58,17 @@
     "VITE_DEV_SERVER_PORT": 7777
   },
   "dependencies": {
+    "@serialport/parser-byte-length": "^10.3.0",
+    "@serialport/parser-cctalk": "^10.3.0",
+    "@serialport/parser-delimiter": "^10.3.0",
+    "@serialport/parser-inter-byte-timeout": "^10.3.0",
+    "@serialport/parser-packet-length": "^10.3.0",
+    "@serialport/parser-readline": "^10.3.0",
+    "@serialport/parser-ready": "^10.3.0",
+    "@serialport/parser-regex": "^10.3.0",
+    "@serialport/parser-slip-encoder": "^10.3.0",
+    "@serialport/parser-spacepacket": "^10.3.0",
+    "@serialport/stream": "^10.3.0",
     "serialport": "^10.4.0"
   },
   "lint-staged": {

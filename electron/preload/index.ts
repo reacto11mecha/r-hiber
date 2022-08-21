@@ -129,7 +129,6 @@ ipcRenderer.on("error-retrieving-arduino-reciever", (ev, detail) => {
   window.dispatchEvent(telemetryOnArduinoListError);
 });
 
-
 ipcRenderer.on("ARCVR:on-data", (ev, detail) => {
   const telemetryReceiverOnData = new CustomEvent(
     "telemetry:receiver-on-data",
@@ -141,7 +140,7 @@ ipcRenderer.on("ARCVR:on-data", (ev, detail) => {
     }
   );
 
-  window.dispatchEvent(telemetryReceiverOnData)
+  window.dispatchEvent(telemetryReceiverOnData);
 });
 
 ipcRenderer.on("ARCVR:connection-status", (ev, detail) => {
@@ -155,7 +154,7 @@ ipcRenderer.on("ARCVR:connection-status", (ev, detail) => {
     }
   );
 
-  window.dispatchEvent(telemetryReceiverConnectionStatus)
+  window.dispatchEvent(telemetryReceiverConnectionStatus);
 });
 
 ipcRenderer.on("ARCVR:on-error", (ev, detail) => {
@@ -169,5 +168,5 @@ ipcRenderer.on("ARCVR:on-error", (ev, detail) => {
     }
   );
 
-  window.dispatchEvent(telemetryReceiverOnError)
+  window.dispatchEvent(telemetryReceiverOnError);
 });

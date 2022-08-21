@@ -1,4 +1,5 @@
 import { app, BrowserWindow, shell, ipcMain } from "electron";
+import { RegexParser } from "@serialport/parser-regex";
 import { SerialPort } from "serialport";
 import { release } from "os";
 import { join } from "path";
@@ -121,8 +122,9 @@ ipcMain.on("list-arduino-reciever", () =>
 function assignPortIfPossible(path: string) {
   port = new SerialPort({
     path,
-    baudRate: 9600,
+    baudRate: 19200,
   });
+  const parser = port.pipe(new RegexParser({ regex: /[\r\n]+/ }));
 
   port.on("open", () =>
     win?.webContents.send("ARCVR:connection-status", { connected: true })
@@ -131,9 +133,43 @@ function assignPortIfPossible(path: string) {
     win?.webContents.send("ARCVR:connection-status", { connected: false })
   );
 
-  port.on("data", (data) =>
-    win?.webContents.send("ARCVR:on-data", { time: Date.now(), raw: data })
-  );
+  parser.on("data", (data) => {
+    const splittedData = data.split(";");
+
+    const [
+      flightState,
+      temperature,
+      pressure,
+      altitude,
+      seaLevelPressure,
+      realAltitude,
+      AccX,
+      AccY,
+      AccZ,
+      roll,
+      pitch,
+      yaw,
+    ] = splittedData.map((value) => Number(value));
+
+    win?.webContents.send("ARCVR:on-data", {
+      time: Date.now(),
+      data: {
+        flightState,
+        temperature,
+        pressure,
+        altitude,
+        seaLevelPressure,
+        realAltitude,
+        AccX,
+        AccY,
+        AccZ,
+        roll,
+        pitch,
+        yaw,
+      },
+      isPartial: splittedData.length < 12,
+    });
+  });
 
   port.on("error", (error) => win?.webContents.send("ARCVR:on-error", error));
 }

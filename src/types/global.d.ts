@@ -12,10 +12,24 @@ export interface ArduinoList {
 }
 export type ArduinoListError = Error;
 
-export interface ReceiverOnData {
+export type ReceiverOnData = {
   time: number;
-  raw: string;
-}
+  data: {
+    flightState: number | undefined;
+    temperature: number | undefined;
+    pressure: number | undefined;
+    altitude: number | undefined;
+    seaLevelPressure: number | undefined;
+    realAltitude: number | undefined;
+    AccX: number | undefined;
+    AccY: number | undefined;
+    AccZ: number | undefined;
+    roll: number | undefined;
+    pitch: number | undefined;
+    yaw: number | undefined;
+  };
+  isPartial: boolean;
+};
 export interface ReceiverOnConnection {
   connected: boolean;
 }
