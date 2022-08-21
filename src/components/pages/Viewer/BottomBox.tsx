@@ -1,5 +1,5 @@
 import type {
-  ReceiverOnError,
+  ReceiverOnData,
 } from "@/types/global.d";
 import { Box, Heading, Text } from "@chakra-ui/react";
 
