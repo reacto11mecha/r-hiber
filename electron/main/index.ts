@@ -1,4 +1,4 @@
-import { app, BrowserWindow, shell, ipcMain } from "electron";
+import { app, BrowserWindow, shell, ipcMain, screen } from "electron";
 import { RegexParser } from "@serialport/parser-regex";
 import { SerialPort } from "serialport";
 import { release } from "os";
@@ -31,9 +31,16 @@ const url = `http://${process.env["VITE_DEV_SERVER_HOST"]}:${process.env["VITE_D
 const indexHtml = join(ROOT_PATH.dist, "index.html");
 
 async function createWindow() {
+  const primaryDisplay = screen.getPrimaryDisplay();
+  const { width, height } = primaryDisplay.workAreaSize;
+
   win = new BrowserWindow({
-    title: "Main window",
+    title: "Roket Hiber",
     icon: join(ROOT_PATH.public, "favicon.svg"),
+    width: width - 50,
+    height: height - 100,
+    minWidth: (3 / 4) * width,
+    minHeight: (5 / 6) * height,
     webPreferences: {
       preload,
       nodeIntegration: false,

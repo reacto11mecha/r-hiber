@@ -111,10 +111,10 @@ export const Viewer = () => {
             h="100%"
             spacing={6}
           >
-            <BottomBox heading="Temp" item="temperature"/>
+            <BottomBox heading="Temp" item="temperature" />
             <BottomBox heading="Pressure" item="pressure" />
             <BottomBox heading="Sea Level" item="seaLevelPressure" />
-            <BottomBox heading="Altitude" item="altitude"/>
+            <BottomBox heading="Altitude" item="altitude" />
             <BottomBox heading="Real Altitude" item="realAltitude" />
           </HStack>
         </Box>
@@ -130,9 +130,9 @@ export const Viewer = () => {
             <BottomBox heading="AccX" item="AccX" />
             <BottomBox heading="AccY" item="AccY" />
             <BottomBox heading="AccZ" item="AccZ" />
-            <BottomBox heading="Roll" item="roll"/>
-            <BottomBox heading="Pitch" item="pitch"/>
-            <BottomBox heading="Yaw" item="yaw"/>
+            <BottomBox heading="Roll" item="roll" />
+            <BottomBox heading="Pitch" item="pitch" />
+            <BottomBox heading="Yaw" item="yaw" />
           </HStack>
         </Box>
       </HStack>
