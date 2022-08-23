@@ -37,10 +37,6 @@ async function createWindow() {
   win = new BrowserWindow({
     title: "Roket Hiber",
     icon: join(ROOT_PATH.public, "favicon.svg"),
-    width: width - 50,
-    height: height - 100,
-    minWidth: (5 / 6) * width,
-    minHeight: (3 / 4) * height,
     webPreferences: {
       preload,
       nodeIntegration: false,

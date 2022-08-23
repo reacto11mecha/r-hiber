@@ -138,10 +138,9 @@ export const Viewer = () => {
             h="100%"
             spacing={6}
           >
-            <BottomBox heading="Altitude" item="altitude" />
-            <BottomBox heading="AccX" item="AccX" />
-            <BottomBox heading="AccY" item="AccY" />
-            <BottomBox heading="AccZ" item="AccZ" />
+            <BottomBox heading="Pressure" item="pressure" />
+            <BottomBox heading="Sea Level" item="seaLevelPressure" />
+            <BottomBox heading="Real Altitude" item="realAltitude" />
           </HStack>
         </Box>
 
