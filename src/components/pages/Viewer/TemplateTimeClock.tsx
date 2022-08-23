@@ -13,7 +13,7 @@ export const TemplateTimeClock = (props: IProps) => {
   return (
     <Box h="25%" w="100%" backgroundColor="tomato">
       <VStack h="100%" alignItems="center" justifyContent="center" spacing={5}>
-        <Heading as="h3" size="lg" style={{ textAlign: "center" }}>
+        <Heading as="h3" size="lg">
           {props.headingText}
         </Heading>
         <Text fontSize="xl" align="center">

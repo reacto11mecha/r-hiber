@@ -17,11 +17,7 @@ export const useMachineState = create<IMachineState>()((set) => ({
 
   telemetryData: {
     flightState: undefined,
-    temperature: undefined,
-    pressure: undefined,
     altitude: undefined,
-    seaLevelPressure: undefined,
-    realAltitude: undefined,
     AccX: undefined,
     AccY: undefined,
     AccZ: undefined,
@@ -35,3 +31,30 @@ export const useMachineState = create<IMachineState>()((set) => ({
   setReceivedTime: (time: number) => set(() => ({ receivedTime: time })),
   setConnectionStatus: (isConnected: boolean) => set(() => ({ isConnected })),
 }));
+
+export interface PlotterStateData {
+  time: number;
+  flightState: number;
+  altitude: number;
+  AccX: number;
+  AccY: number;
+  AccZ: number;
+  roll: number;
+  pitch: number;
+  yaw: number;
+}
+
+export interface IMachineStateForPlotly {
+  telemetryData: IMachineState["telemetryData"][];
+  pushData: (data: IMachineState["telemetryData"]) => void;
+}
+
+export const useMachineStateForPlotly = create<IMachineStateForPlotly>()(
+  (set) => ({
+    telemetryData: [],
+    pushData: (data: IMachineState["telemetryData"]) =>
+      set((items) => ({
+        telemetryData: [...items.telemetryData, data],
+      })),
+  })
+);

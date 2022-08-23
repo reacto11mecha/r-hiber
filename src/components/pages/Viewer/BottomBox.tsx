@@ -1,13 +1,16 @@
-import type {
-  ReceiverOnData,
-} from "@/types/global.d";
+import type { ReceiverOnData } from "@/types/global.d";
 import { Box, Heading, Text } from "@chakra-ui/react";
 
 import { useMachineState } from "@/stores/ViewerStore";
 
-export const BottomBox = (props: { heading: string, item: keyof ReceiverOnData["data"] }) => {
-  const dynamicallySelected = useMachineState((state) => state.telemetryData[props.item]);
-  
+export const BottomBox = (props: {
+  heading: string;
+  item: keyof ReceiverOnData["data"];
+}) => {
+  const dynamicallySelected = useMachineState(
+    (state) => state.telemetryData[props.item]
+  );
+
   return (
     <Box
       h="100%"

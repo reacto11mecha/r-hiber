@@ -18,6 +18,8 @@ import {
 import { IoRocketOutline } from "react-icons/io5";
 import { MdUsb, MdArrowRightAlt } from "react-icons/md";
 
+import styles from "@/styles/pages/Home.module.css";
+
 export const Home = () => {
   const toast = useToast();
   const [arduinos, setArduinos] = useState<null | PortInfo[]>(null);
@@ -53,11 +55,7 @@ export const Home = () => {
   return (
     <Flex align="center" justify="center" width="100vw" height="100vh">
       <Stack spacing={10}>
-        <Heading
-          as="h2"
-          size="3xl"
-          style={{ display: "inline-flex", justifyContent: "space-around" }}
-        >
+        <Heading as="h2" size="3xl" className={styles.cardContainer}>
           Roket Hiber <IoRocketOutline />
         </Heading>
         <Box
@@ -102,7 +100,7 @@ export const Home = () => {
                         colorScheme="blue"
                         marginLeft="179px"
                         rightIcon={
-                          <MdArrowRightAlt style={{ fontSize: "2.05em" }} />
+                          <MdArrowRightAlt className={styles.iconStyle} />
                         }
                         as={Link}
                         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion

@@ -16,11 +16,7 @@ export type ReceiverOnData = {
   time: number;
   data: {
     flightState: number | undefined;
-    temperature: number | undefined;
-    pressure: number | undefined;
     altitude: number | undefined;
-    seaLevelPressure: number | undefined;
-    realAltitude: number | undefined;
     AccX: number | undefined;
     AccY: number | undefined;
     AccZ: number | undefined;

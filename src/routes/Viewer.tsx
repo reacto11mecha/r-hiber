@@ -1,11 +1,15 @@
 import { useEffect } from "react";
 import shallow from "zustand/shallow";
 import { useParams } from "react-router-dom";
-import { Heading, Text } from "@chakra-ui/react";
 
-import { useMachineState } from "@/stores/ViewerStore";
+import {
+  useMachineState,
+  useMachineStateForPlotly,
+} from "@/stores/ViewerStore";
 
-import { useToast, Flex, Stack, VStack, HStack, Box } from "@chakra-ui/react";
+import { useToast, Stack, VStack, HStack, Box } from "@chakra-ui/react";
+
+import styles from "@/styles/pages/Viewer.module.css";
 
 import { TemplateTimeClock } from "@/components/pages/Viewer/TemplateTimeClock";
 import { ISConnectedCard } from "@/components/pages/Viewer/ISConnectedCard";
@@ -19,11 +23,24 @@ import type {
   ReceiverOnError,
 } from "@/types/global.d";
 
+// const Plotter = () => {
+//   const telemetryData = useMachineStateForPlotly(
+//     (state) => state.telemetryData
+//   );
+
+//   const time = useMemo(() => telemetryData.map((data) => data.time));
+//   const altitude = useMemo(() => telemetryData.map((data) => data.altitude));
+
+//   return <></>;
+// };
+
 export const Viewer = () => {
   const params = useParams();
   const toast = useToast();
 
   const isConnected = useMachineState((state) => state.isConnected);
+  const pushDataToPlotter = useMachineStateForPlotly((state) => state.pushData);
+
   const { setConnectionStatus, setReceivedTime, setTelemetryData } =
     useMachineState(
       ({ setConnectionStatus, setReceivedTime, setTelemetryData }) => ({
@@ -40,6 +57,7 @@ export const Viewer = () => {
       window.telemetryAPI.connectToArduinoReceiver(params.usbPath!);
 
     const RcvrOnData = (event: CustomEvent<ReceiverOnData>) => {
+      pushDataToPlotter(event.detail.data);
       setReceivedTime(event.detail.time);
       setTelemetryData(event.detail.data);
     };
@@ -82,8 +100,13 @@ export const Viewer = () => {
   }, []);
 
   return (
-    <div style={{ height: "100vh" }}>
-      <Stack direction={"row"} spacing={5} h="90vh">
+    <div className={styles.container}>
+      <Stack
+        direction={"row"}
+        spacing={5}
+        h="90vh"
+        className={styles.subContainer}
+      >
         <VStack w="22.5%" spacing={5}>
           <TemplateTimeClock timeZone="utc" headingText="UTC Time" />
           <TemplateTimeClock timeZone="Asia/Jakarta" headingText="WIB Time" />
@@ -95,13 +118,17 @@ export const Viewer = () => {
           <ReceivedTimeUNIX />
           <FlightState />
         </VStack>
-        <VStack w="55%"></VStack>
+        <VStack w="55%">
+          <Box w="100%" h="100%" bg="grey">
+            {/* <Plotter /> */}
+          </Box>
+        </VStack>
       </Stack>
       <HStack
         h={10}
         height="calc(8vh + 0.1px)"
         w="100%"
-        style={{ textAlign: "center", position: "fixed", bottom: 0 }}
+        className={styles.footerWrapper}
       >
         <Box w="50%" h="100%" bg="tomato">
           <HStack
@@ -111,11 +138,10 @@ export const Viewer = () => {
             h="100%"
             spacing={6}
           >
-            <BottomBox heading="Temp" item="temperature"/>
-            <BottomBox heading="Pressure" item="pressure" />
-            <BottomBox heading="Sea Level" item="seaLevelPressure" />
-            <BottomBox heading="Altitude" item="altitude"/>
-            <BottomBox heading="Real Altitude" item="realAltitude" />
+            <BottomBox heading="Altitude" item="altitude" />
+            <BottomBox heading="AccX" item="AccX" />
+            <BottomBox heading="AccY" item="AccY" />
+            <BottomBox heading="AccZ" item="AccZ" />
           </HStack>
         </Box>
 
@@ -127,12 +153,9 @@ export const Viewer = () => {
             h="100%"
             spacing={6}
           >
-            <BottomBox heading="AccX" item="AccX" />
-            <BottomBox heading="AccY" item="AccY" />
-            <BottomBox heading="AccZ" item="AccZ" />
-            <BottomBox heading="Roll" item="roll"/>
-            <BottomBox heading="Pitch" item="pitch"/>
-            <BottomBox heading="Yaw" item="yaw"/>
+            <BottomBox heading="Roll" item="roll" />
+            <BottomBox heading="Pitch" item="pitch" />
+            <BottomBox heading="Yaw" item="yaw" />
           </HStack>
         </Box>
       </HStack>

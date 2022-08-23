@@ -1,4 +1,4 @@
-import { app, BrowserWindow, shell, ipcMain } from "electron";
+import { app, BrowserWindow, shell, ipcMain, screen } from "electron";
 import { RegexParser } from "@serialport/parser-regex";
 import { SerialPort } from "serialport";
 import { release } from "os";
@@ -31,9 +31,16 @@ const url = `http://${process.env["VITE_DEV_SERVER_HOST"]}:${process.env["VITE_D
 const indexHtml = join(ROOT_PATH.dist, "index.html");
 
 async function createWindow() {
+  const primaryDisplay = screen.getPrimaryDisplay();
+  const { width, height } = primaryDisplay.workAreaSize;
+
   win = new BrowserWindow({
-    title: "Main window",
+    title: "Roket Hiber",
     icon: join(ROOT_PATH.public, "favicon.svg"),
+    width: width - 50,
+    height: height - 100,
+    minWidth: (5 / 6) * width,
+    minHeight: (3 / 4) * height,
     webPreferences: {
       preload,
       nodeIntegration: false,
@@ -136,30 +143,14 @@ function assignPortIfPossible(path: string) {
   parser.on("data", (data) => {
     const splittedData = data.split(";");
 
-    const [
-      flightState,
-      temperature,
-      pressure,
-      altitude,
-      seaLevelPressure,
-      realAltitude,
-      AccX,
-      AccY,
-      AccZ,
-      roll,
-      pitch,
-      yaw,
-    ] = splittedData.map((value) => Number(value));
+    const [flightState, altitude, AccX, AccY, AccZ, roll, pitch, yaw] =
+      splittedData.map((value) => Number(value));
 
     win?.webContents.send("ARCVR:on-data", {
       time: Date.now(),
       data: {
         flightState,
-        temperature,
-        pressure,
         altitude,
-        seaLevelPressure,
-        realAltitude,
         AccX,
         AccY,
         AccZ,
@@ -181,7 +172,9 @@ ipcMain.on("ARCVR:connect-arduino", (event, path: string) => {
         win?.webContents.send("ARCVR:connection-status", { connected: true });
       else port.open();
     } else {
-      port.close().then(() => assignPortIfPossible(path));
+      port.close();
+
+      assignPortIfPossible(path);
     }
 
     return;

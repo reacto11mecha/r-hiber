@@ -1,0 +1,12 @@
+.container {
+  height: 100vh;
+}
+
+.subContainer {
+  text-align: center;
+}
+
+.footerWrapper {
+  position: fixed;
+  bottom: 0;
+}
