@@ -2,10 +2,7 @@ import { useEffect } from "react";
 import shallow from "zustand/shallow";
 import { useParams } from "react-router-dom";
 
-import {
-  useMachineState,
-  useMachineStateForPlotly,
-} from "@/stores/ViewerStore";
+import { useMachineState } from "@/stores/ViewerStore";
 
 import { useToast, Stack, VStack, HStack, Box } from "@chakra-ui/react";
 
@@ -16,6 +13,7 @@ import { ISConnectedCard } from "@/components/pages/Viewer/ISConnectedCard";
 import { ReceivedTimeUNIX } from "@/components/pages/Viewer/ReceivedTimeUNIX";
 import { FlightState } from "@/components/pages/Viewer/FlightState";
 import { BottomBox } from "@/components/pages/Viewer/BottomBox";
+import { Plotter } from "@/components/pages/Viewer/Plotter";
 
 import type {
   ReceiverOnData,
@@ -23,23 +21,11 @@ import type {
   ReceiverOnError,
 } from "@/types/global.d";
 
-// const Plotter = () => {
-//   const telemetryData = useMachineStateForPlotly(
-//     (state) => state.telemetryData
-//   );
-
-//   const time = useMemo(() => telemetryData.map((data) => data.time));
-//   const altitude = useMemo(() => telemetryData.map((data) => data.altitude));
-
-//   return <></>;
-// };
-
 export const Viewer = () => {
   const params = useParams();
   const toast = useToast();
 
   const isConnected = useMachineState((state) => state.isConnected);
-  const pushDataToPlotter = useMachineStateForPlotly((state) => state.pushData);
 
   const { setConnectionStatus, setReceivedTime, setTelemetryData } =
     useMachineState(
@@ -57,7 +43,6 @@ export const Viewer = () => {
       window.telemetryAPI.connectToArduinoReceiver(params.usbPath!);
 
     const RcvrOnData = (event: CustomEvent<ReceiverOnData>) => {
-      pushDataToPlotter(event.detail.data);
       setReceivedTime(event.detail.time);
       setTelemetryData(event.detail.data);
     };
@@ -120,7 +105,7 @@ export const Viewer = () => {
         </VStack>
         <VStack w="55%">
           <Box w="100%" h="100%" bg="grey">
-            {/* <Plotter /> */}
+            <Plotter />
           </Box>
         </VStack>
       </Stack>
